@@ -23,9 +23,17 @@ ENV/
 # IDE
 .idea/
 .vscode/
-*.swp
-*.swo
+*.swp*.swo
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Additional rules
+# Ignore large binary files
+*.pkl
+*.bin
+
+# Ignore temporary files
+*.tmp
+*.bak
