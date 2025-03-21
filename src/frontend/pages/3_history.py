@@ -62,6 +62,22 @@ def plot_result(df):
 def history_page():
     st.title("📝 回测记录")
     
+    # 新增核心功能说明 ================================
+    with st.expander("📌 记录说明", expanded=True):
+        st.markdown("""
+        ### 功能特性
+        
+        **📂 数据管理**  
+        1. 自动保存最近30天回测结果  
+        2. 支持按策略类型筛选  
+        3. 提供原始数据下载
+        
+        **📈 图表说明**  
+        - 累计收益率计算已包含交易摩擦成本  
+        - 所有结果基于复权价格计算  
+        - 时间轴自动对齐交易日历
+        """)
+    # ==============================================
     st.markdown(
         """
         <style>
@@ -108,11 +124,25 @@ def history_page():
                     label="下载数据",
                     data=df.to_csv(),
                     file_name=result['文件名'],
-                    mime="text/csv"
+                    mime="text/csv",
+                    help="包含完整交易日和每日收益率的CSV文件"
                 )
+                
+                # 新增技术细节说明（修复嵌套循环问题）
+                with st.expander("🔍 数据说明", expanded=False):
+                    st.markdown("""
+                    **数据保留策略**  
+                    - 存储路径：`项目根目录/results/`  
+                    - 自动清理：30天前的结果  
+                    - 文件命名：`策略类型_参数摘要_时间戳.csv`
+                    
+                    **指标解释**  
+                    - 年化波动率：基于252个交易日计算  
+                    - 最大回撤：考虑连续回撤周期  
+                    """)
                 
             except Exception as e:
                 st.error(f"加载结果文件时出错: {str(e)}")
 
 if __name__ == "__main__":
-    history_page() 
+    history_page()

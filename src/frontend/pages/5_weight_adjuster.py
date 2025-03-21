@@ -213,17 +213,28 @@ def weight_adjuster_page():
         """, unsafe_allow_html=True
     )
     
-    st.markdown("""
-    ### 功能说明
-    
-    此工具用于调整投资组合权重，确保每日权重变化不超过设定的限制。
-    
-    1. 上传包含目标权重的CSV文件
-    2. 设置每日最大权重变化限制
-    3. 系统将生成符合限制的新权重文件
-    """)
-    
-    # CSV Template Download
+    # 新增核心功能说明 ================================
+    with st.expander("📌 核心功能说明", expanded=True):
+        st.markdown("""
+        ### 实际应用意义
+        
+        **📈 渐进式调仓**  
+        解决组合权重突变问题，通过每日涨跌幅限制实现平滑调仓，避免市场冲击
+        
+        **⚖️ 权重约束**  
+        1. 单日单个标的权重变化 ≤ ±5%（默认值可调）  
+        2. 禁止负权重（不做空）  
+        3. 自动归一化处理
+        
+        **📊 风险控制**  
+        通过限制权重变化速度：  
+        - 降低组合波动率  
+        - 防范极端行情冲击  
+        - 符合监管对组合调整频率的要求
+        """)
+    # ==============================================
+
+    # 原有模板下载部分保持不变 ========================
     st.markdown("### 下载CSV模板")
     st.download_button(
         label="下载权重CSV模板",
@@ -232,17 +243,18 @@ def weight_adjuster_page():
         mime="text/csv"
     )
     
-    # 文件上传
+    # 文件上传部分 ============================
     weight_file = st.file_uploader("上传权重矩阵CSV文件", type=['csv'])
     
-    # 设置每日变化限制
+    # 参数说明 ==================================
     change_limit = st.slider(
         "设置每日最大权重变化限制", 
         min_value=0.01, 
         max_value=0.20, 
         value=0.05, 
         step=0.01,
-        format="%.2f"
+        format="%.2f",
+        help="⚠️ 注意：该参数直接影响调仓速度和市场冲击成本，建议根据标的流动性调整"  # 新增帮助提示
     )
     
     if weight_file is not None:
@@ -344,4 +356,4 @@ def weight_adjuster_page():
             logger.exception("权重调整失败详细信息:")
 
 if __name__ == "__main__":
-    weight_adjuster_page() 
+    weight_adjuster_page()

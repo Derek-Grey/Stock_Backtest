@@ -91,6 +91,26 @@ def render_backtest_page():
     st.set_page_config(page_title="📈 参考策略回测", layout="wide", initial_sidebar_state="expanded")
     st.title("📈 参考策略回测")
     
+    # 新增核心功能说明 ================================
+    with st.expander("📌 策略说明", expanded=True):
+        st.markdown("""
+        ### 策略背景
+        
+        **🔍 设计初衷**  
+        提供快速验证简单策略的参考框架，基于行业公开方法搭建原型
+        
+        **📊 策略特性**  
+        1. 双模式选择：固定持仓 vs 动态百分比  
+        2. 灵活参数配置：支持持仓数量/比例范围设置  
+        3. 多维度指标：评估收益风险比
+        
+        ### 使用须知
+        - 本策略结果仅供参考，不构成投资建议
+        - 参数设置需考虑市场流动性（单票持仓不宜超过日均成交量的5%）
+        - 默认使用简化计算假设，实际交易需考虑滑点与手续费
+        """)
+    # ==============================================
+
     # Custom CSS for styling
     st.markdown(
         """
@@ -117,7 +137,7 @@ def render_backtest_page():
         """, unsafe_allow_html=True
     )
     
-    st.markdown('<div class="sub-title">欢迎使用策略回测，本策略是行业大佬提供的评分数据，来确定每日的持仓股票，结果仅供参考，评分矩阵可以参考数据查看模块</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">欢迎使用策略回测</div>', unsafe_allow_html=True)
     st.markdown('<h2><i class="fas fa-cogs icon"></i>回测参数设置</h2>', unsafe_allow_html=True)
     
     # 日期选择
@@ -143,13 +163,25 @@ def render_backtest_page():
         position_type = st.radio(
             "持仓方式",
             ["固定数量", "动态百分比"],
-            index=0
+            index=0,
+            help="固定数量：选择每日持仓股票数 | 动态百分比：按评分排序分配持仓比例"
         )
         
         if position_type == "固定数量":
-            # 固定持仓参数
-            hold_count = st.number_input("持仓数量", min_value=1, max_value=500, value=50)
-            rebalance_frequency = st.number_input("再平衡频率(天)", min_value=1, max_value=30, value=1)
+            hold_count = st.number_input(
+                "持仓数量", 
+                min_value=1, 
+                max_value=500, 
+                value=50,
+                help="建议根据资金规模设置，通常50-100只分散风险"
+            )
+            rebalance_frequency = st.number_input(
+                "再平衡频率(天)", 
+                min_value=1, 
+                max_value=30, 
+                value=1,
+                help="频率越高交易成本越大，建议1-5天"
+            )
         else:
             # 动态持仓参数
             start_percentage = st.number_input("起始百分比", min_value=0.0, max_value=1.0, value=0.01, format="%.3f")
@@ -246,4 +278,4 @@ if __name__ == "__main__":
         retention="7 days",
         level="INFO"
     )
-    render_backtest_page() 
+    render_backtest_page()

@@ -87,15 +87,39 @@ def quick_backtest_page():
         """
         <style>
         .main-title {
-            font-size: 2rem;  /* Unified font size */
+            font-size: 2rem;
         }
         </style>
         """, unsafe_allow_html=True
     )
     
+    # 新增核心功能说明 ================================
+    with st.expander("📌 核心功能说明", expanded=True):
+        st.markdown("""
+        ### 实际应用意义
+        
+        **📊 组合绩效评估**  
+        通过历史数据验证投资组合的收益风险特征，评估策略可行性
+        
+        **⚖️ 风险控制**  
+        1. 支持多维度风险指标：波动率、最大回撤、夏普比率  
+        2. 可视化收益分布特征  
+        3. 交易成本估算（通过换手率）
+        
+        **🔍 应用场景**  
+        - 策略原型快速验证
+        - 组合再平衡效果评估
+        - 不同权重配置对比分析
+        """)
+    # ==============================================
+
     # 在 quick_backtest_page 函数中添加用户自定义选项
     st.sidebar.header("图表设置")
-    color_option = st.sidebar.color_picker("选择图表颜色", "#1f77b4")
+    color_option = st.sidebar.color_picker(
+        "选择图表颜色", 
+        "#1f77b4",
+        help="选择主图表的主题颜色，支持RGB/HEX格式"
+    )
 
     # CSV Template Downloads
     st.markdown("### 下载CSV模板")
@@ -103,14 +127,16 @@ def quick_backtest_page():
         label="下载权重CSV模板",
         data="date,code,weight\n2023-01-03,SH600788,0.1\n2023-01-03,SZ000765,0.2\n",
         file_name="weight_template.csv",
-        mime="text/csv"
+        mime="text/csv",
+        help="模板文件应包含日期(date)、股票代码(code)、权重(weight)三列"
     )
     
     st.download_button(
         label="下载收益率CSV模板",
         data="date,code,return\n2023-01-03,SH600000,-0.00688\n2023-01-03,SZ000765,-0.00233\n",
         file_name="return_template.csv",
-        mime="text/csv"
+        mime="text/csv",
+        help="模板文件应包含日期(date)、股票代码(code)、收益率(return)三列"
     )
 
     # 文件上传
@@ -146,7 +172,7 @@ def quick_backtest_page():
             st.success("文件上传成功！")
             
             # 添加确认按钮
-            if st.button("开始回测"):
+            if st.button("开始回测", help="开始执行回测计算，处理时间取决于数据量大小"):
                 # 检查数据格式
                 checker = DataChecker()
                 try:
@@ -167,6 +193,21 @@ def quick_backtest_page():
                         # 显示回测结果
                         st.subheader("回测结果")
                         display_metrics(portfolio_returns, turnover)
+                        
+                        # 新增技术细节说明 ======================
+                        with st.expander("🔍 技术细节说明"):
+                            st.markdown("""
+                            **计算逻辑**  
+                            1. 日频累计收益率：$R_t = \prod_{i=1}^t (1 + r_i) - 1$  
+                            2. 年化波动率：$\sigma_{annual} = \sigma_{daily} \times \sqrt{252}$  
+                            3. 最大回撤：$MDD = \max_{t}\left(1 - \frac{R_t}{Peak_t}\right)$
+                            
+                            **假设条件**  
+                            - 不考虑交易摩擦成本（可通过换手率估算）
+                            - 收益率已包含分红再投资
+                            - 权重调整无延迟执行
+                            """)
+                        # ======================================
                         
                         # 添加收益分布直方图
                         hist_fig = plot_return_distribution(portfolio_returns, color_option)
@@ -361,4 +402,4 @@ def save_to_mongo(data, collection_name):
 if __name__ == "__main__":
     # 在脚本开始时调用此函数以确保表已创建
     create_results_table()
-    quick_backtest_page() 
+    quick_backtest_page()
