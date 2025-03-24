@@ -88,6 +88,19 @@ def history_page():
         """, unsafe_allow_html=True
     )
     
+    # 新增技术细节说明（移到循环外部）
+    with st.expander("🔍 数据说明", expanded=False):
+        st.markdown("""
+        **数据保留策略**  
+        - 存储路径：`项目根目录/results/`  
+        - 自动清理：30天前的结果  
+        - 文件命名：`策略类型_参数摘要_时间戳.csv`
+        
+        **指标解释**  
+        - 年化波动率：基于252个交易日计算  
+        - 最大回撤：表示在选定时间段内从峰值跌至谷底的最大损失百分比 
+        """)
+
     results = load_results()
     
     if not results:
@@ -127,19 +140,6 @@ def history_page():
                     mime="text/csv",
                     help="包含完整交易日和每日收益率的CSV文件"
                 )
-                
-                # 新增技术细节说明（修复嵌套循环问题）
-                with st.expander("🔍 数据说明", expanded=False):
-                    st.markdown("""
-                    **数据保留策略**  
-                    - 存储路径：`项目根目录/results/`  
-                    - 自动清理：30天前的结果  
-                    - 文件命名：`策略类型_参数摘要_时间戳.csv`
-                    
-                    **指标解释**  
-                    - 年化波动率：基于252个交易日计算  
-                    - 最大回撤：考虑连续回撤周期  
-                    """)
                 
             except Exception as e:
                 st.error(f"加载结果文件时出错: {str(e)}")

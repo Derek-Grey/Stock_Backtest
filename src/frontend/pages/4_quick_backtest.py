@@ -324,7 +324,7 @@ def plot_cumulative_returns(returns):
             tickfont=dict(color=profit_color),
             tickformat='.2%',
             gridcolor='lightgrey',
-            showgrid=True,
+            showgrid=False, 
             zeroline=True,
             zerolinecolor='lightgrey'
         ),
@@ -341,13 +341,13 @@ def plot_cumulative_returns(returns):
         ),
         xaxis=dict(
             type='category',
-            showgrid=True,
+            showgrid=False, 
             gridcolor='lightgrey',
             tickfont=dict(size=10),
             tickangle=45,
             tickmode='array',
-            ticktext=formatted_times,
-            tickvals=formatted_times,
+            ticktext=formatted_times[::50],  # 每隔10个时间点显示一个刻度
+            tickvals=formatted_times[::50],  # 每隔10个时间点显示一个刻度
             showticklabels=True  # 显示刻度标签
         ),
         legend=dict(
