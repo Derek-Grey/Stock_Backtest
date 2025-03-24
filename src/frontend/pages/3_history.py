@@ -88,7 +88,7 @@ def history_page():
         """, unsafe_allow_html=True
     )
     
-    # 新增技术细节说明（移到循环外部）
+    # 技术细节说明
     with st.expander("🔍 数据说明", expanded=False):
         st.markdown("""
         **数据保留策略**  
