@@ -112,7 +112,15 @@ def quick_backtest_page():
         - 不同权重配置对比分析
         """)
     # ==============================================
-
+    # 新增技术细节说明 ======================
+    with st.expander("🔍 技术细节说明"):
+        st.markdown(r"""
+        **计算逻辑**  
+        1. 日频累计收益率：$R_t = \prod_{i=1}^t (1 + r_i) - 1$  
+        2. 年化波动率：$\sigma_{annual} = \sigma_{daily} \times \sqrt{252}$  
+        3. 最大回撤：$$MDD = \max_{t}\left(1 - \frac{R_t}{Peak_t}\right)$$
+        """)
+    # ======================================
     # 在 quick_backtest_page 函数中添加用户自定义选项
     st.sidebar.header("图表设置")
     color_option = st.sidebar.color_picker(
@@ -182,7 +190,7 @@ def quick_backtest_page():
                     st.error(f"数据验证失败: {str(e)}")
                     return
                 
-                # 执行回测
+                # 执行回测![1744961329530](image/4_quick_backtest/1744961329530.png)![1744961333066](image/4_quick_backtest/1744961333066.png)![1744961341657](image/4_quick_backtest/1744961341657.png)![1744961345098](image/4_quick_backtest/1744961345098.png)
                 try:
                     with st.spinner("正在执行回测..."):
                         portfolio_returns, turnover = calculate_portfolio_metrics(
@@ -193,21 +201,6 @@ def quick_backtest_page():
                         # 显示回测结果
                         st.subheader("回测结果")
                         display_metrics(portfolio_returns, turnover)
-                        
-                        # 新增技术细节说明 ======================
-                        with st.expander("🔍 技术细节说明"):
-                            st.markdown("""
-                            **计算逻辑**  
-                            1. 日频累计收益率：$R_t = \prod_{i=1}^t (1 + r_i) - 1$  
-                            2. 年化波动率：$\sigma_{annual} = \sigma_{daily} \times \sqrt{252}$  
-                            3. 最大回撤：$MDD = \max_{t}\left(1 - \frac{R_t}{Peak_t}\right)$
-                            
-                            **假设条件**  
-                            - 不考虑交易摩擦成本（可通过换手率估算）
-                            - 收益率已包含分红再投资
-                            - 权重调整无延迟执行
-                            """)
-                        # ======================================
                         
                         # 添加收益分布直方图
                         hist_fig = plot_return_distribution(portfolio_returns, color_option)
