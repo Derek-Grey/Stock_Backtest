@@ -66,6 +66,52 @@ def main():
         [data-testid="stSidebarNav"] div button p {
             font-weight: normal;
         }
+        /* 添加以下CSS来隐藏英文并显示中文 */
+        [data-testid="stSidebarNav"] li:nth-child(1) div a p::after {
+            content: "主页";
+            visibility: visible;
+            display: block;
+            position: absolute;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(1) div a p {
+            visibility: hidden;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(2) div a p::after {
+            content: "策略回测";
+            visibility: visible;
+            display: block;
+            position: absolute;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(2) div a p {
+            visibility: hidden;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(3) div a p::after {
+            content: "数据查看";
+            visibility: visible;
+            display: block;
+            position: absolute;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(3) div a p {
+            visibility: hidden;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(4) div a p::after {
+            content: "回测记录";
+            visibility: visible;
+            display: block;
+            position: absolute;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(4) div a p {
+            visibility: hidden;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(5) div a p::after {
+            content: "快速回测";
+            visibility: visible;
+            display: block;
+            position: absolute;
+        }
+        [data-testid="stSidebarNav"] li:nth-child(5) div a p {
+            visibility: hidden;
+        }
         </style>
         """,
         unsafe_allow_html=True

@@ -18,7 +18,7 @@ def find_free_port(start_port=8501, max_port=8999):
 
 def main():
     # 获取前端应用入口文件路径
-    frontend_path = Path(__file__).resolve().parent / "src" / "frontend" / "Home.py"
+    frontend_path = Path(__file__).resolve().parent / "src" / "frontend" / "主页.py"
     
     # 查找可用端口
     try:
